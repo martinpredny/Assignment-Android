@@ -16,18 +16,17 @@ This assignment should just helps us to evaluate level of your skills. You don't
 * It's about understanding android lifecycles (activity, process, viewmodel, recycler...)
 * It's about asynchronous loading of data and showing reasonable state on UI
 
-### Handover ### 
+### Handover ###
 
 * Create a private fork of this repository
 * Assign admin rights to jozef.knazko@goodrequest.com
 * Create develop branch
-* You can commit and push changes continuously
-* 
+* Do all 3 task in order after each other in 3 separated commits
 * Set jozef.knazko@goodrequest.com as reviewer
 
 ### Project ###
 
-You will work with prepared project. It's very small, about 150 lines of code and you should have no problem to read and understand it all.
+You will work with prepared project. It's very small, around 150 lines of code and you should have no problem to read and understand it all.
 We picked technologies recommended by google to make this assignment accessible to most developers.
 
 * Kotlin
@@ -43,7 +42,7 @@ There are only 4 files:
 * common.kt - these are some general utils and you probably won't have to touch this code. There are already prepared 2 http requests and helper function to creating ViewModel with SavedStateHandle.
 * other 3 files - contains Activity, ViewModel and RecyclerView.Adapter
 
-### Task 1 ###
+## Task 1: ##
 
 Your colleague wrote these 4 files but then mysteriously disappeared and you have to finish it. You have to check if everything works as expected and possibly fix it. There is no catch, everything is standard, user-friendly behavior.
 
@@ -60,22 +59,26 @@ App should correctly handle configuration changes (e.g. screen rotation)
 * there should no unnecessary http requests
 
 Obviously app shouldn't crash, leak memory, get stuck and shouldn't show some nonsensical UI state.
-Fix all the issues in the code. Try to make just minimal changes to existing code (try not to rewrite everything from scratch). But please, don't add any libraries.   
+Fix all the issues in the code. Try to make just minimal changes to existing code (try not to rewrite everything from scratch). But please, don't add any other libraries.   
 
-### Task 2 ###
+## Task 2: ##
 
 We are loading only 10 cat images in one request. Let's make this app more useful. Instead of hardcoded text we want to show some fun fact to every picture.
 This request is already implemented in Api.getCatFact(). But it returns only 1 fact, so we have to call it 10 times to pair it with every cat image. 
 
 * in every call of CatsModel.loadCats() load not only images but also unique fun fact for every image 
 * if getCatImages fails keep the same behaviour as in Task 1 
-* for every image show in UI text of fun fact or "no fact" string if particular request failed 
+* on UI show in every item fun fact text if request succeeded or "no fact" if particular request failed 
 
-### Task 3 ###
+## Task 3: ##
 
 10 cat images is not enough! Let's add paging. When user scrolls to the bottom of the list we need to automatically load next data. For example: we have initial 10 items, user scrolls to the bottom and we load next 10. So now we have 20 items in recycler and so on.
 Don't use Paging library from google or any other library. This task is not specifically about paging. It should just demonstrate how you can handle a little more complicated state machine with combination of crazy android lifecycles. You will probably have to make bigger changes to Activity and ViewModel. Focus on correctness, readability, and try to make it foolproof.    
 
 * all requirements from Task 1 and 2 should still work the same
 * for every new page you also have to load 10 new fun facts
-* if you already have let's say 50 images and now user does pull-to-refresh then loading and failure behavior is same as in Task 1. But if refresh succeeds drop previous 50 images and keep only these 10 new ones
+* if you already have let's say 50 images and now user does pull-to-refresh then loading and failure behavior is same as in Task 1. But if refresh succeeds drop those previous 50 images and keep only these 10 new ones
+* while loading of page is running add new item at the end of recycler. This item will show only progressbar.
+* when loading of page fails show new item at the end of recycler. This item will contain retry button that tries to load this failed page one more time
+
+When everything is done our UI should hadle 3 different loading states and 3 different error states (first page/any other page/refresh)
