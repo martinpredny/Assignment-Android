@@ -1,6 +1,6 @@
 # ANDROID APP ASSIGNMENT #
 
-This assignment should just helps us to evaluate level of your skills. You don't have to solve everyting perfectly to be hired.
+This assignment should just helps us to evaluate level of your skills. You don't have to solve everything perfectly to be hired.
 
 ### What is this assignment NOT about? ###
 
@@ -16,6 +16,15 @@ This assignment should just helps us to evaluate level of your skills. You don't
 * It's about understanding android lifecycles (activity, process, viewmodel, recycler...)
 * It's about asynchronous loading of data and showing reasonable state on UI
 
+### Handover ### 
+
+* Create a private fork of this repository
+* Assign admin rights to jozef.knazko@goodrequest.com
+* Create develop branch
+* You can commit and push changes continuously
+* 
+* Set jozef.knazko@goodrequest.com as reviewer
+
 ### Project ###
 
 You will work with prepared project. It's very small, about 150 lines of code and you should have no problem to read and understand it all.
@@ -30,6 +39,7 @@ We picked technologies recommended by google to make this assignment accessible 
 Application loads and shows a list of cat images. You will be fixing some issues and adding new features.
 
 There are only 4 files:
+
 * common.kt - these are some general utils and you probably won't have to touch this code. There are already prepared 2 http requests and helper function to creating ViewModel with SavedStateHandle.
 * other 3 files - contains Activity, ViewModel and RecyclerView.Adapter
 
@@ -44,7 +54,8 @@ Your colleague wrote these 4 files but then mysteriously disappeared and you hav
 * If refresh fails user can still see current data and some error message should be shown in snackbar
 
 App should correctly handle configuration changes (e.g. screen rotation)
-* current state (loading, refreshing, error, ...) should be corrently preserved after configuration change
+
+* current state (loading, refreshing, error, ...) should be correctly preserved after configuration change
 * RecyclerView scroll position should be preserved after configuration change
 * there should no unnecessary http requests
 
@@ -63,8 +74,8 @@ This request is already implemented in Api.getCatFact(). But it returns only 1 f
 ### Task 3 ###
 
 10 cat images is not enough! Let's add paging. When user scrolls to the bottom of the list we need to automatically load next data. For example: we have initial 10 items, user scrolls to the bottom and we load next 10. So now we have 20 items in recycler and so on.
-Don't use Paging library from google or any other library. This task is not specifically about paging. It should just demonstrate how you can handle a little more complicated state machine with combination of crazy android livecycles. You will probably have to make bigger changes to Activity and ViewModel. Focus on correctness, readability, and try to make it foolproof.    
+Don't use Paging library from google or any other library. This task is not specifically about paging. It should just demonstrate how you can handle a little more complicated state machine with combination of crazy android lifecycles. You will probably have to make bigger changes to Activity and ViewModel. Focus on correctness, readability, and try to make it foolproof.    
 
 * all requirements from Task 1 and 2 should still work the same
 * for every new page you also have to load 10 new fun facts
-* if you already have let's say 50 images and now userd does pull-to-refresh then loading and failure behavior is same as in Task 1. But if refresh succeeds drop previous 50 images and keep only these 10 new ones
+* if you already have let's say 50 images and now user does pull-to-refresh then loading and failure behavior is same as in Task 1. But if refresh succeeds drop previous 50 images and keep only these 10 new ones
