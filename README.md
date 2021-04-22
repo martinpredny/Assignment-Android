@@ -81,4 +81,4 @@ Don't use Paging library from google or any other library. This task is not spec
 * while loading of page is running add new item at the end of recycler. This item will show only progressbar.
 * when loading of page fails show new item at the end of recycler. This item will contain retry button that tries to load this failed page one more time
 
-When everything is done our UI should hadle 3 different loading states and 3 different error states (first page/any other page/refresh)
+When everything is done our UI should handle 3 different loading states and 3 different error states (first page/any other page/refresh)
