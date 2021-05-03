@@ -22,7 +22,7 @@ This assignment should just helps us to evaluate level of your skills. You don't
 * Assign admin rights to jozef.knazko@goodrequest.com
 * Create develop branch
 * Do all 3 task in order after each other in 3 separated commits
-* Set jozef.knazko@goodrequest.com as reviewer
+* Share repository to jozef.knazko@goodrequest.com and veronika.stefanatna@goodrequest.com
 
 ### Project ###
 
