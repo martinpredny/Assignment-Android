@@ -6,7 +6,9 @@ import android.view.View.VISIBLE
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.*
 import com.goodrequest.hiring.PokemonApi
+import com.goodrequest.hiring.R
 import com.goodrequest.hiring.databinding.ActivityBinding
+import com.google.android.material.snackbar.Snackbar
 
 class PokemonActivity: ComponentActivity() {
 
@@ -25,6 +27,7 @@ class PokemonActivity: ComponentActivity() {
                 result?.fold(
                     onSuccess = { pokemons ->
                         loading.visibility = GONE
+                        failure.visibility = GONE
                         val adapter = PokemonAdapter()
                         items.adapter = adapter
                         adapter.show(pokemons)
@@ -34,6 +37,16 @@ class PokemonActivity: ComponentActivity() {
                         failure.visibility = VISIBLE
                     }
                 )
+                refresh.isRefreshing = false
+            }
+
+            // show snackbar in case of refresh error
+            vm.refreshError.observe(this@PokemonActivity) { error: Boolean ->
+                if (error) {
+                    vm.refreshError.postValue(false)
+                    Snackbar.make(root, getString(R.string.refresh_error), Snackbar.LENGTH_LONG).show()
+                    refresh.isRefreshing = false
+                }
             }
         }
     }

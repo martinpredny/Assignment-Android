@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hiring">
 
-        <activity android:name=".ui.PokemonActivity" android:exported="true">
+        <activity
+            android:name=".ui.PokemonActivity"
+            android:exported="true"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
