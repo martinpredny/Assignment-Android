@@ -21,7 +21,10 @@ class PokemonActivity: ComponentActivity() {
         ActivityBinding.inflate(layoutInflater).run {
             setContentView(root)
             refresh.setOnRefreshListener { vm.load() }
-            retry.setOnClickListener { vm.load() }
+            retry.setOnClickListener {
+                loading.visibility = VISIBLE
+                vm.load()
+            }
 
             vm.pokemons.observe(this@PokemonActivity) { result: Result<List<Pokemon>>? ->
                 result?.fold(
@@ -40,7 +43,7 @@ class PokemonActivity: ComponentActivity() {
                 refresh.isRefreshing = false
             }
 
-            // show snackbar in case of refresh error
+            // Show snackbar in case of refresh error
             vm.refreshError.observe(this@PokemonActivity) { error: Boolean ->
                 if (error) {
                     vm.refreshError.postValue(false)

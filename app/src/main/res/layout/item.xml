@@ -36,6 +36,7 @@
         <TextView
             tools:text="Mega turbo splash"
             android:id="@+id/move"
+            android:textColor="@color/black"
             android:paddingHorizontal="8dp"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -46,6 +47,7 @@
         <TextView
             tools:text="128 kg"
             android:id="@+id/weight"
+            android:textColor="@color/black"
             android:paddingHorizontal="8dp"
             android:textSize="14sp"
             android:layout_width="match_parent"

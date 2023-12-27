@@ -34,7 +34,13 @@ class Item(view: View): RecyclerView.ViewHolder(view) {
         ui.image.load(pokemon.detail?.image) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
+            error(R.drawable.ic_launcher_foreground)
         }
         ui.name.text = pokemon.name
+        ui.move.text = pokemon.detail?.move
+        // -1 is placeholder value if detail loading fails
+        if(pokemon.detail != null && pokemon.detail.weight != -1) {
+            ui.weight.text = pokemon.detail.weight.toString()
+        }
     }
 }

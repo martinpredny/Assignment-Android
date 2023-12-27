@@ -19,17 +19,34 @@ class PokemonViewModel(
     fun load() {
         GlobalScope.launch {
             val result = api.getPokemons(page = 1)
-            // pokemons were previously loaded successfully
-            if(pokemons.value?.getOrDefault(listOf())?.isNotEmpty() == true) {
-                if(result.isSuccess) {
-                    pokemons.postValue(result)
-                } else {
-                    refreshError.postValue(true)
-                }
+            if(result.isSuccess) {
+                    val pokemonList = result.getOrDefault(listOf())
+                    fetchDetailsAndUpdateLiveData(pokemonList)
             } else {
-                pokemons.postValue(result)
+                if (pokemons.value?.getOrDefault(listOf())?.isNotEmpty() == true) {
+                    // Pokemons were previously loaded successfully, just show snackbar
+                    refreshError.postValue(true)
+                } else {
+                    // Pokemons were not loaded previously, show retry button
+                    pokemons.postValue(result)
+                }
             }
         }
+    }
+
+    private suspend fun fetchDetailsAndUpdateLiveData(pokemonList: List<Pokemon>) {
+        // Fetch details for each Pokemon
+        val detailedPokemonList = pokemonList.map { pokemon ->
+            val detailResult = api.getPokemonDetail(pokemon)
+            val detail = if (detailResult.isSuccess) {
+                detailResult.getOrDefault(PokemonDetail("", "", -1))
+            } else {
+                // Handle fetching detail failure
+                PokemonDetail("", "", -1)
+            }
+            pokemon.copy(detail = detail)
+        }
+        pokemons.postValue(Result.success(detailedPokemonList))
     }
 }
 
