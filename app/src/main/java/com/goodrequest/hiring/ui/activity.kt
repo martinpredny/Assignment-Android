@@ -4,35 +4,42 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.*
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelLazy
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.goodrequest.hiring.PokemonApi
 import com.goodrequest.hiring.R
 import com.goodrequest.hiring.databinding.ActivityBinding
 import com.google.android.material.snackbar.Snackbar
 
-class PokemonActivity: ComponentActivity() {
+class PokemonActivity : ComponentActivity(), PokemonAdapterListener {
+    val vm by viewModel { PokemonViewModel(it, PokemonApi) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val vm by viewModel { PokemonViewModel(it, null, PokemonApi) }
-        vm.load()
+        vm.loadFirstPage()
 
         ActivityBinding.inflate(layoutInflater).run {
             setContentView(root)
-            refresh.setOnRefreshListener { vm.load() }
-            retry.setOnClickListener {
-                loading.visibility = VISIBLE
-                vm.load()
+            val adapter = PokemonAdapter(this@PokemonActivity)
+            items.adapter = adapter
+            refresh.setOnRefreshListener {
+                vm.loadFirstPage()
             }
 
-            vm.pokemons.observe(this@PokemonActivity) { result: Result<List<Pokemon>>? ->
+            retry.setOnClickListener {
+                loading.visibility = VISIBLE
+                vm.loadFirstPage()
+            }
+
+            vm.pokemons.observe(this@PokemonActivity) { result: Result<List<PokemonListItem>>? ->
                 result?.fold(
                     onSuccess = { pokemons ->
                         loading.visibility = GONE
                         failure.visibility = GONE
-                        val adapter = PokemonAdapter()
-                        items.adapter = adapter
                         adapter.show(pokemons)
                     },
                     onFailure = {
@@ -43,15 +50,35 @@ class PokemonActivity: ComponentActivity() {
                 refresh.isRefreshing = false
             }
 
-            // Show snackbar in case of refresh error
-            vm.refreshError.observe(this@PokemonActivity) { error: Boolean ->
+            // Show snack bar in case of refresh error
+            vm.refreshErrorOccurred.observe(this@PokemonActivity) { error: Boolean ->
                 if (error) {
-                    vm.refreshError.postValue(false)
-                    Snackbar.make(root, getString(R.string.refresh_error), Snackbar.LENGTH_LONG).show()
+                    vm.refreshErrorOccurred.postValue(false)
+                    Snackbar.make(root, getString(R.string.refresh_error), Snackbar.LENGTH_LONG)
+                        .show()
                     refresh.isRefreshing = false
                 }
             }
+
+            items.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    val totalItemCount = layoutManager.itemCount
+
+                    if (!vm.isLoadingNextPage() && !refresh.isRefreshing && lastVisibleItemPosition == totalItemCount - 1) {
+                        vm.setLoadingNextPage(true)
+                        vm.addLoadingItemToRecycler()
+                        vm.loadNextPage()
+                    }
+                }
+            })
         }
+    }
+
+    override fun onRetryButtonClick() {
+        vm.loadNextPage()
     }
 }
 

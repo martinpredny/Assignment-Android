@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Hiring</string>
+    <string name="general_error">Something went wrong!</string>
     <string name="refresh_error">Error occurred while refreshing data!</string>
+    <string name="try_again_button">Try again</string>
+    <string name="retry_button">Retry</string>
 </resources>
