@@ -1,6 +1,5 @@
 package com.goodrequest.hiring.ui
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.goodrequest.hiring.PokemonApi
@@ -8,14 +7,22 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class PokemonViewModel(
-    state: SavedStateHandle,
+    private val state: SavedStateHandle,
     private val api: PokemonApi
 ) : ViewModel() {
 
-    val pokemons = MutableLiveData<Result<List<PokemonListItem>>>()
-    val refreshErrorOccurred = MutableLiveData<Boolean>()
-    private var currentPage = 1
-    private var isLoadingNextPage = false
+    companion object {
+        private const val POKEMONS_KEY = "pokemons_key"
+        private const val REFRESH_ERROR_KEY = "refresh_error_key"
+        private const val CURRENT_PAGE_KEY = "current_page_key"
+        private const val LOADING_NEXT_PAGE_KEY = "loading_next_page_key"
+    }
+
+    // Use `state.getLiveData` for data that you want to survive configuration changes
+    val pokemons = state.getLiveData<Result<List<PokemonListItem>>>(POKEMONS_KEY)
+    val refreshErrorOccurred = state.getLiveData<Boolean>(REFRESH_ERROR_KEY)
+    private var currentPage = state.get<Int>(CURRENT_PAGE_KEY) ?: 1
+    private var isLoadingNextPage = state.get<Boolean>(LOADING_NEXT_PAGE_KEY) ?: false
 
     fun addLoadingItemToRecycler() {
         val loaderItem = PokemonListItem.LoadingItem
@@ -108,6 +115,16 @@ class PokemonViewModel(
 
     fun setLoadingNextPage(loading: Boolean) {
         isLoadingNextPage = loading
+    }
+
+    override fun onCleared() {
+        // Save necessary data to the SavedStateHandle before the ViewModel is cleared
+        // to programmatically handle configuration changes
+        state[POKEMONS_KEY] = pokemons.value
+        state[REFRESH_ERROR_KEY] = refreshErrorOccurred.value
+        state[CURRENT_PAGE_KEY] = currentPage
+        state[LOADING_NEXT_PAGE_KEY] = isLoadingNextPage
+        super.onCleared()
     }
 }
 

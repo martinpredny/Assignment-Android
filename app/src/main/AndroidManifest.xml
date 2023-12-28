@@ -14,8 +14,7 @@
 
         <activity
             android:name=".ui.PokemonActivity"
-            android:exported="true"
-            android:configChanges="keyboardHidden|orientation|screenSize|uiMode" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

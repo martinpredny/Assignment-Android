@@ -20,7 +20,11 @@ class PokemonActivity : ComponentActivity(), PokemonAdapterListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vm.loadFirstPage()
+
+        // Do not make unnecessary http requests during configuration change
+        if (vm.pokemons.value == null) {
+            vm.loadFirstPage()
+        }
 
         ActivityBinding.inflate(layoutInflater).run {
             setContentView(root)
